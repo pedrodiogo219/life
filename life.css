@@ -1,6 +1,7 @@
 .cell{
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
 }
 .cell-dead{
     background-color: black;
@@ -11,4 +12,7 @@
 
 body{
     background-color: bisque;
+}
+table {
+    border-spacing: 0px;
 }
