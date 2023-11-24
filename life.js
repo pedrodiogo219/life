@@ -46,7 +46,7 @@ function createTable(){
             newCell = newRowElement.insertCell();
             newCell.className = "cell cell-dead"
             newCell.onclick = () => {
-                if (RUN) RUN = false;
+                if (RUN) stop();
                 else swapCell(i, j);
             }
             newRow.push(newCell)
@@ -60,9 +60,14 @@ function createTable(){
 function drawState(){
     for (let i = 0; i < ROWS; i++){
         for (let j = 0; j < COLS; j++){
-            state[i][j] ? 
-                table[i][j].className = "cell cell-alive" :
-                table[i][j].className = "cell cell-dead"
+            if(ALIVE(i,j)){
+                table[i][j].classList.add("cell-alive");
+                table[i][j].classList.remove("cell-dead");
+            }
+            else {
+                table[i][j].classList.add("cell-dead");
+                table[i][j].classList.remove("cell-alive");
+            }
         }
     }
 }
@@ -110,10 +115,20 @@ async function gameLoop(){
 
 function go(){
     RUN = true;
+    for(let row of table){
+        for (let cell of row){
+            cell.classList.add("pointer")
+        }
+    }
 }
 
 function stop(){
     RUN = false;
+    for(let row of table){
+        for (let cell of row){
+            cell.classList.remove("pointer")
+        }
+    }
 }
 
 function init(){

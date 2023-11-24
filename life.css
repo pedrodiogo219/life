@@ -9,10 +9,12 @@
 .cell-alive{
     background-color: white;
 }
-
 body{
     background-color: bisque;
 }
 table {
     border-spacing: 0px;
+}
+.pointer {
+    cursor: pointer;
 }
