@@ -1,16 +1,28 @@
-const ROWS = 10;
-const COLS = 10;
-const ALIVE = true;
-const DEAD = false;
 let state;
 let table;
+const ROWS = 10;
+const COLS = 10;
+const ALIVE = (i, j) => state[i][j];
+const DEAD = (i, j) => !state[i][j];
+let RUN = false;
 
 function createInitialState() {
+    return  [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+
     const state = new Array();
     for(let i = 0; i < ROWS; i++){
         newRow = new Array();
         for (let j = 0; j < COLS; j++){
-            newRow.push(DEAD);
+            newRow.push(false);
         }
         state.push(newRow);
     }
@@ -33,7 +45,10 @@ function createTable(){
         for (let j = 0; j < COLS; j++){
             newCell = newRowElement.insertCell();
             newCell.className = "cell cell-dead"
-            newCell.onclick = () => swapCell(i, j)
+            newCell.onclick = () => {
+                if (RUN) RUN = false;
+                else swapCell(i, j);
+            }
             newRow.push(newCell)
         }
         tableElement.appendChild(newRowElement);
@@ -42,7 +57,7 @@ function createTable(){
     return table;
 }
 
-function drawState(state, table){
+function drawState(){
     for (let i = 0; i < ROWS; i++){
         for (let j = 0; j < COLS; j++){
             state[i][j] ? 
@@ -52,18 +67,62 @@ function drawState(state, table){
     }
 }
 
-state = createInitialState();
-table = createTable();
+function outOfBounds(i, j){
+    return i < 0 || i >= ROWS || j < 0 || j >= COLS;
+}
 
-state = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+function countNeighbours(i, j){
+    let count = 0
+    for (let dx of [-1, 0, 1]){
+        for (let dy of [-1, 0, 1]){
+            if (dx == 0 && dy == 0) continue;
+            if (outOfBounds(i+dx, j+dy)) continue;
+            count += ALIVE(i+dx, j+dy);
+        }
+    }
+    return count;
+}
 
-drawState(state, table)
+function nextState(){
+    let newState = JSON.parse(JSON.stringify(state));
+    for(let i = 0; i < ROWS; i++){
+        for(let j = 0; j < COLS; j++){
+            let n = countNeighbours(i, j);
+            if (ALIVE(i, j)){
+                if (n < 2) newState[i][j] = false;
+                if (n > 3) newState[i][j] = false;
+            }
+            else {
+                if (n == 3) newState[i][j] = true;
+            }
+        }
+    }
+    return newState;
+}
+
+async function gameLoop(){
+    if(RUN){
+        state = nextState();
+        drawState();
+    }
+    setTimeout(() => gameLoop(), 200);
+}
+
+function go(){
+    RUN = true;
+}
+
+function stop(){
+    RUN = false;
+}
+
+function init(){
+    state = createInitialState();
+    table = createTable();
+    drawState();
+    gameLoop();
+}
+
+init();
+
+
