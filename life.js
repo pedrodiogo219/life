@@ -1,22 +1,12 @@
 let state;
 let table;
-const ROWS = 10;
-const COLS = 10;
+const ROWS = 100;
+const COLS = 100;
 const ALIVE = (i, j) => state[i][j];
 const DEAD = (i, j) => !state[i][j];
 let RUN = false;
 
 function createInitialState() {
-    return  [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
     const state = new Array();
     for(let i = 0; i < ROWS; i++){
@@ -26,14 +16,21 @@ function createInitialState() {
         }
         state.push(newRow);
     }
+
+    let glider = [[0, 0, 1],
+                  [1, 0, 1],
+                  [0, 1, 1]]
+    for (let i = 0; i < 3; i++){
+        for (let j = 0; j < 3; j++){
+            state[i][j] = glider[i][j];
+        }
+    }
     return state;
 }
 
 function swapCell(i, j){
     state[i][j] = !state[i][j];
-    state[i][j] ? 
-        table[i][j].className = "cell cell-alive" :
-        table[i][j].className = "cell cell-dead"
+    drawCell(i, j);
 }
 
 function createTable(){
@@ -57,17 +54,21 @@ function createTable(){
     return table;
 }
 
+function drawCell(i, j){
+    if(ALIVE(i,j)){
+        table[i][j].classList.add("cell-alive");
+        table[i][j].classList.remove("cell-dead");
+    }
+    else {
+        table[i][j].classList.add("cell-dead");
+        table[i][j].classList.remove("cell-alive");
+    }
+}
+
 function drawState(){
     for (let i = 0; i < ROWS; i++){
         for (let j = 0; j < COLS; j++){
-            if(ALIVE(i,j)){
-                table[i][j].classList.add("cell-alive");
-                table[i][j].classList.remove("cell-dead");
-            }
-            else {
-                table[i][j].classList.add("cell-dead");
-                table[i][j].classList.remove("cell-alive");
-            }
+            drawCell(i, j);
         }
     }
 }

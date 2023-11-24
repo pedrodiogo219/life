@@ -1,6 +1,6 @@
 .cell{
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     padding: 0px;
 }
 .cell-dead{
@@ -14,7 +14,12 @@ body{
 }
 table {
     border-spacing: 0px;
+    table-layout: fixed;
+    width: fit-content;
 }
 .pointer {
     cursor: pointer;
+}
+.debug{
+    border: solid 1px red;
 }
