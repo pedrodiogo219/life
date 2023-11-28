@@ -1,7 +1,8 @@
 let state;
 let table;
-const ROWS = 100;
-const COLS = 100;
+let viewElement;
+const ROWS = 300;
+const COLS = 300;
 const ALIVE = (i, j) => state[i][j];
 const DEAD = (i, j) => !state[i][j];
 let RUN = false;
@@ -43,8 +44,7 @@ function createTable(){
             newCell = newRowElement.insertCell();
             newCell.className = "cell cell-dead"
             newCell.onclick = () => {
-                if (RUN) stop();
-                else swapCell(i, j);
+                swapCell(i, j);
             }
             newRow.push(newCell)
         }
@@ -116,23 +116,44 @@ async function gameLoop(){
 
 function go(){
     RUN = true;
-    for(let row of table){
-        for (let cell of row){
-            cell.classList.add("pointer")
-        }
-    }
 }
 
 function stop(){
     RUN = false;
-    for(let row of table){
-        for (let cell of row){
-            cell.classList.remove("pointer")
+}
+
+function playOrPause(){
+    RUN = !RUN;
+    buttonText = RUN ? "STOP!" : "GO!";
+    document.getElementById("play").textContent = buttonText;
+}
+
+function makeViewDraggable(){
+    viewElement = document.getElementById("view");
+    let isDrag = false;
+    const toggleDrag = () => {
+        console.log("toggled")
+        isDrag = !isDrag
+        if (isDrag){
+            document.body.style.cursor = "grab"
+        } else {
+            document.body.style.cursor = "default"
         }
-    }
+    };
+    const drag = (ev) => {
+        if (isDrag){
+            viewElement.scrollLeft -= ev.movementX;
+            viewElement.scrollTop -= ev.movementY;
+        }
+    };
+    
+    viewElement.addEventListener("pointerdown", toggleDrag);
+    viewElement.addEventListener("pointerup", toggleDrag);
+    viewElement.addEventListener("pointermove", drag);
 }
 
 function init(){
+    makeViewDraggable();
     state = createInitialState();
     table = createTable();
     drawState();

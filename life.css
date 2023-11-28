@@ -2,6 +2,7 @@
     width: 20px;
     height: 20px;
     padding: 0px;
+    border: solid 1px grey;
 }
 .cell-dead{
     background-color: black;
@@ -22,4 +23,11 @@ table {
 }
 .debug{
     border: solid 1px red;
+}
+#view{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 500px;
+    margin: 20px;
 }

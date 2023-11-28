@@ -4,12 +4,15 @@
         <link rel="stylesheet" href="life.css">
     </head>
     <body>
-        <h1>L * I * F * E</h1>
-        <button onclick="go()">GO!</button>
-        <button onclick="stop()">STOP!</button>
+        <center>
+            <h1>L * I * F * E</h1>
+            <button id="play" onclick="playOrPause()">PLAY!</button>
+        </center>
 
-        <table id="board">
-        </table>
+        <div id="view">
+            <table id="board">
+            </table>
+        </div>
 
         <script type="text/javascript" src="life.js"></script>
     </body>
