@@ -140,6 +140,12 @@ function makeViewDraggable(){
             document.body.style.cursor = "default"
         }
     };
+    const toggleDragIfItExists = () => {
+        if (isDrag){
+            isDrag = false;
+            document.body.style.cursor = "default"
+        }
+    }
     const drag = (ev) => {
         if (isDrag){
             viewElement.scrollLeft -= ev.movementX;
@@ -148,8 +154,8 @@ function makeViewDraggable(){
     };
     
     viewElement.addEventListener("pointerdown", toggleDrag);
-    viewElement.addEventListener("pointerup", toggleDrag);
-    viewElement.addEventListener("pointermove", drag);
+    addEventListener("pointerup", toggleDragIfItExists);
+    addEventListener("pointermove", drag);
 }
 
 function init(){
